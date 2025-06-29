@@ -7,18 +7,29 @@ export function Sender(){
                 socket.onopen = () => {
                         socket.send(JSON.stringify({type:"sender"}))
                 }
+                setSocket(socket)
         },[])
         async function SendVideo(){
+                if(!socket){
+                        return
+                }
                 //create offer
                 const pc = new RTCPeerConnection() // create an RTCPeerConnection
                 const offer =await  pc.createOffer() // create an offer
                 await pc.setLocalDescription(offer)  // set local desc as an offer
 
                 // send offer through signaling server (Websockets)
-                socket?.send(JSON.stringify({
+                socket.send(JSON.stringify({
                         type:'createOffer',
                         sdp:pc.localDescription
                 }))
+
+                socket.onmessage = async (event)=>{
+                        const message  = JSON.parse(event.data)
+                        if(message.type=='createAnswer'){
+                                pc.setRemoteDescription(message.sdp)
+                        }
+                }
 
         }
         return(

@@ -5,36 +5,38 @@ const wss = new ws_1.WebSocketServer({ port: 8080 });
 let senderSocket = null;
 let reciverSocket = null;
 wss.on("connection", (ws) => {
-    console.log('user connected');
     ws.on("message", (data) => {
         const message = JSON.parse(data);
-        console.log(message);
-        if (message.type == "sender") {
+        if (message.type === "sender") {
             senderSocket = ws;
+            console.log('sender set');
         }
-        else if (message.type == "reciever") {
+        else if (message.type === "receiver") {
             reciverSocket = ws;
+            console.log('reciever set');
         }
-        else if (message.type == "createOffer") {
+        else if (message.type === "createOffer") {
             if (ws != senderSocket) {
                 return;
             }
-            reciverSocket === null || reciverSocket === void 0 ? void 0 : reciverSocket.send(JSON.stringify({ type: "creatOffer", sdp: message.sdp }));
+            reciverSocket === null || reciverSocket === void 0 ? void 0 : reciverSocket.send(JSON.stringify({ type: "createOffer", sdp: message.sdp }));
+            console.log('offer recieved');
         }
-        else if (message.type == "createAnswer") {
+        else if (message.type === "createAnswer") {
             if (ws != reciverSocket) {
                 return;
             }
-            senderSocket === null || senderSocket === void 0 ? void 0 : senderSocket.send(JSON.stringify({ type: "answer", sdp: message.sdp }));
+            senderSocket === null || senderSocket === void 0 ? void 0 : senderSocket.send(JSON.stringify({ type: "createAnswer", sdp: message.sdp }));
+            console.log('answer recieved');
         }
-        else if (message.type == "IceCanditate") {
-            if (ws == senderSocket) {
+        else if (message.type === "IceCanditate") {
+            if (ws === senderSocket) {
                 reciverSocket === null || reciverSocket === void 0 ? void 0 : reciverSocket.send(JSON.stringify({
                     type: "IceCandiate",
                     candidate: message.candidate,
                 }));
             }
-            else if (ws == reciverSocket) {
+            else if (ws === reciverSocket) {
                 senderSocket === null || senderSocket === void 0 ? void 0 : senderSocket.send(JSON.stringify({
                     type: "IceCandiate",
                     candidate: message.candidate,
