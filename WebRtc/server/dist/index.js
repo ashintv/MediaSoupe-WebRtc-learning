@@ -29,16 +29,18 @@ wss.on("connection", (ws) => {
             senderSocket === null || senderSocket === void 0 ? void 0 : senderSocket.send(JSON.stringify({ type: "createAnswer", sdp: message.sdp }));
             console.log('answer recieved');
         }
-        else if (message.type === "IceCanditate") {
+        else if (message.type === "IceCandidate") {
             if (ws === senderSocket) {
+                console.log('shared IC from sender to reciever');
                 reciverSocket === null || reciverSocket === void 0 ? void 0 : reciverSocket.send(JSON.stringify({
-                    type: "IceCandiate",
+                    type: "IceCandidate",
                     candidate: message.candidate,
                 }));
             }
             else if (ws === reciverSocket) {
+                console.log('shared IC from rec ro sender');
                 senderSocket === null || senderSocket === void 0 ? void 0 : senderSocket.send(JSON.stringify({
-                    type: "IceCandiate",
+                    type: "IceCandidate",
                     candidate: message.candidate,
                 }));
             }

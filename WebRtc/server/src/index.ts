@@ -30,18 +30,20 @@ wss.on("connection", (ws) => {
                 JSON.stringify({ type: "createAnswer", sdp: message.sdp })
             );
             console.log('answer recieved')
-        } else if (message.type === "IceCanditate") {
+        } else if (message.type === "IceCandidate") {
             if (ws === senderSocket) {
+                console.log('shared IC from sender to reciever')
                 reciverSocket?.send(
                     JSON.stringify({
-                        type: "IceCandiate",
+                        type: "IceCandidate",
                         candidate: message.candidate,
                     })
                 );
             } else if (ws === reciverSocket) {
+                console.log('shared IC from rec ro sender')
                 senderSocket?.send(
                     JSON.stringify({
-                        type: "IceCandiate",
+                        type: "IceCandidate",
                         candidate: message.candidate,
                     })
                 );
