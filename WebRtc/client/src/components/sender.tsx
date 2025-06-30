@@ -47,13 +47,9 @@ export function Sender() {
                                 pc.addIceCandidate(message.candidate)
                         }
                 }
-                // const stream = await navigator.mediaDevices.getUserMedia({ video:true , audio:false})
-                // pc.addTrack(stream.getVideoTracks()[0])
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                const videoTrack = stream.getVideoTracks()[0];
-
-                pc.addTrack(videoTrack, stream); // ✅ include stream
-
+                const stream = await navigator.mediaDevices.getUserMedia({ video:true , audio:false})
+                pc.addTrack(stream.getVideoTracks()[0])
+               
 
         }
         return (
